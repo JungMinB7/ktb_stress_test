@@ -8,6 +8,10 @@ const path = require('path');
 const { router: roomsRouter, initializeSocket } = require('./routes/api/rooms');
 const routes = require('./routes');
 
++ const client = require('prom-client'); // ✅ Prometheus client 추가
++ const collectDefaultMetrics = client.collectDefaultMetrics;
++ collectDefaultMetrics(); // ✅ 기본 시스템 메트릭 수집 시작
+
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
