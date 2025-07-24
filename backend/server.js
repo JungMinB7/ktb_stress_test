@@ -8,9 +8,9 @@ const path = require('path');
 const { router: roomsRouter, initializeSocket } = require('./routes/api/rooms');
 const routes = require('./routes');
 
-+ const client = require('prom-client'); // ✅ Prometheus client 추가
-+ const collectDefaultMetrics = client.collectDefaultMetrics;
-+ collectDefaultMetrics(); // ✅ 기본 시스템 메트릭 수집 시작
+const client = require('prom-client'); // ✅ Prometheus client 추가
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics(); // ✅ 기본 시스템 메트릭 수집 시작
 
 const app = express();
 const server = http.createServer(app);
@@ -74,6 +74,13 @@ app.get('/health', (req, res) => {
     env: process.env.NODE_ENV
   });
 });
+
+// 📈 Prometheus 메트릭 엔드포인트 추가
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
+  
 
 // API 라우트 마운트
 app.use('/api', routes);
